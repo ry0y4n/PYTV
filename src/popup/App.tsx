@@ -1,11 +1,11 @@
-import { useState, useEffect, ReactNode } from 'react'
+import { useState, useEffect } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import { api_endpoint } from '../../endpoint.json'
 import { FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 import { FcCancel } from 'react-icons/fc';
 
-function App(): ReactNode {
+function App(): JSX.Element {
   const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
@@ -32,12 +32,12 @@ function App(): ReactNode {
   }
 
   async function post(): Promise<void> {
-    // // 疎通確認用
-    // await fetch(`${apiUrl}`);
-    // // 本番用
-    // await fetch(`${apiUrl}&url=${url}`);
+    // 疎通確認用
+    await fetch(`${apiUrl}`);
+    // 本番用
+    await fetch(`${apiUrl}&url=${url}`);
     
-    // window.close();
+    window.close();
   }
 
   return (
@@ -99,7 +99,7 @@ interface PostButtonProps {
   post: () => Promise<void>;
 }
 
-function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): ReactNode {
+function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): JSX.Element {
   async function handleClick(): Promise<void> {
     setIsClicked(true);
     await post();
@@ -125,7 +125,7 @@ function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps
   }
 }
 
-function Annotation({isClicked}: {isClicked: boolean}): ReactNode | null {
+function Annotation({isClicked}: {isClicked: boolean}): JSX.Element | null {
   if (isClicked) {
     return (
       <p className="annotation"><FaInfoCircle color={"#FFCC01"} /> Posting is done asynchronously, so it takes about one minute. Posting will continue without any problems even if this popup is closed.</p>
