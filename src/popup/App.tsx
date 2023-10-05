@@ -23,7 +23,10 @@ function App() {
     setUrl(res.url);
   }
 
-  function post() {
+  async function post() {
+    // 疎通確認用
+    await fetch(`${apiUrl}`);
+    // 本番用
     fetch(`${apiUrl}&url=${url}`);
     setTimeout(() => {
       window.close();
