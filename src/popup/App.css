@@ -69,10 +69,29 @@
   border-radius: 5px;
   color: #FFF;
   cursor: pointer;
+  line-height: 0;
 }
 
 .post-button:hover {
   background-color: #3ca3e8;
+}
+
+.post-button.invalid {
+  cursor: not-allowed;
+}
+
+.post-button.invalid:hover {
+  background-color: #1C9BEF;
+}
+
+.post-button__clicked {
+  width: 258px;
+  margin-top: 30px;
+  height: 35px;
+  background-color: #1C9BEF;
+  border: none;
+  border-radius: 5px;
+  line-height: 0;
 }
 
 @keyframes App-logo-spin {

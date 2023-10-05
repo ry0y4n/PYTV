@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import { api_endpoint } from '../../endpoint.json'
+import { FaCheckCircle } from 'react-icons/fa';
+import { FcCancel } from 'react-icons/fc';
 
 function App(): JSX.Element {
   const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
+  const [isClicked, setIsClicked] = useState(false);
+  const [isValidURL, setIsValidURL] = useState(false);
   const apiUrl: string = api_endpoint;
 
   // 依存関係を空にすることで，起動時に一度だけ実行される
@@ -15,12 +19,16 @@ function App(): JSX.Element {
   }, []);
 
   async function setCurrentTabInfo(): Promise<void> {
-    console.log('post');
-    console.log(api_endpoint);
     const res = await chrome.runtime.sendMessage({ action: 'post' });
-    console.log(res.title);
-    setTitle(res.title);
-    setUrl(res.url);
+
+    if (res.url.startsWith('https://www.youtube.com/watch?v=')) {
+      setIsValidURL(true);
+      setTitle(res.title);
+      setUrl(res.url);
+    } else {
+      setTitle("Invalid URL: Please open with the YouTube video URL.");
+      setUrl("Invalid URL: Please open with the YouTube video URL.");
+    }
   }
 
   async function post(): Promise<void> {
@@ -77,10 +85,43 @@ function App(): JSX.Element {
         <input className="url__value" type="text" value={url} readOnly />
       </div>
       <div className="button-wrapper">
-        <button className="post-button" onClick={post}>Post Video</button>
+        <PostButton isValidURL={isValidURL} isClicked={isClicked} setIsClicked={setIsClicked} post={post} />
       </div>
     </div>
   )
+}
+
+interface PostButtonProps {
+  isValidURL: boolean;
+  isClicked: boolean;
+  setIsClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  post: () => Promise<void>;
+}
+
+function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): JSX.Element {
+  async function handleClick(): Promise<void> {
+    setIsClicked(true);
+    await post();
+  }
+
+  if (isClicked) {
+    return (
+      <button className="post-button__clicked" disabled>
+        <FaCheckCircle size={20} color={'#FFF'} />
+      </button>
+    );
+  } else {
+    return (
+      <button
+        className={isValidURL ? "post-button" : "post-button invalid"}
+        id="postButton"
+        onClick={handleClick}
+        disabled={!isValidURL}
+      >
+        {isValidURL ? 'Post Video' : <FcCancel size={30} />}
+      </button>
+    );
+  }
 }
 
 export default App
