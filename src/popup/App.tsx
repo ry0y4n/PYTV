@@ -3,18 +3,18 @@ import logo from './logo.svg'
 import './App.css'
 import { api_endpoint } from '../../endpoint.json'
 
-function App() {
+function App(): JSX.Element {
   const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
-  const apiUrl = api_endpoint;
+  const apiUrl: string = api_endpoint;
 
   // 依存関係を空にすることで，起動時に一度だけ実行される
   useEffect(() => {
     setCurrentTabInfo();
   }, []);
 
-  async function setCurrentTabInfo() {
+  async function setCurrentTabInfo(): Promise<void> {
     console.log('post');
     console.log(api_endpoint);
     const res = await chrome.runtime.sendMessage({ action: 'post' });
@@ -23,14 +23,13 @@ function App() {
     setUrl(res.url);
   }
 
-  async function post() {
+  async function post(): Promise<void> {
     // 疎通確認用
     await fetch(`${apiUrl}`);
     // 本番用
-    fetch(`${apiUrl}&url=${url}`);
-    setTimeout(() => {
-      window.close();
-    }, 1000);
+    await fetch(`${apiUrl}&url=${url}`);
+    
+    window.close();
   }
 
   return (
