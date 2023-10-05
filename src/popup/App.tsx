@@ -10,7 +10,8 @@ function App(): JSX.Element {
   const [url, setUrl] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [isValidURL, setIsValidURL] = useState(false);
-  const apiUrl: string = api_endpoint;
+  // const apiUrl: string = api_endpoint;
+  const apiUrl: string = "https://tweet-youtube-clip-api.onrender.com/post";
 
   // 依存関係を空にすることで，起動時に一度だけ実行される
   useEffect(() => {
@@ -31,10 +32,10 @@ function App(): JSX.Element {
   }
 
   async function post(): Promise<void> {
-    // 疎通確認用
-    await fetch(`${apiUrl}`);
+    // // 疎通確認用
+    // await fetch(`${apiUrl}`);
     // 本番用
-    await fetch(`${apiUrl}&url=${url}`);
+    await fetch(`${apiUrl}?url=${url}`);
     
     window.close();
   }
