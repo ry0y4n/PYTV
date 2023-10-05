@@ -23,4 +23,6 @@ PYTV makes it easy to do so. With this extension, you can now share your favorit
 
 2. Install the Extension
 
-    When the build completes, open Chrome or Edge and navigate to chrome://extensions. Make sure to turn on the developer mode switch.
+    1. Go to the Extensions page (`chrome://extensions`).
+    2. Enable Developer Mode by clicking the toggle switch next to **Developer mode**.
+    3. Click the **Load unpacked** button and select the `dist/` directory.
