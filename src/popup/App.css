@@ -71,6 +71,10 @@
   cursor: pointer;
 }
 
+.post-button:hover {
+  background-color: #3ca3e8;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
