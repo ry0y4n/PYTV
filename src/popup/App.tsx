@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import { api_endpoint } from '../../endpoint.json'
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 import { FcCancel } from 'react-icons/fc';
 
-function App(): JSX.Element {
+function App(): ReactNode {
   const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
@@ -32,12 +32,12 @@ function App(): JSX.Element {
   }
 
   async function post(): Promise<void> {
-    // 疎通確認用
-    await fetch(`${apiUrl}`);
-    // 本番用
-    await fetch(`${apiUrl}&url=${url}`);
+    // // 疎通確認用
+    // await fetch(`${apiUrl}`);
+    // // 本番用
+    // await fetch(`${apiUrl}&url=${url}`);
     
-    window.close();
+    // window.close();
   }
 
   return (
@@ -87,6 +87,7 @@ function App(): JSX.Element {
       <div className="button-wrapper">
         <PostButton isValidURL={isValidURL} isClicked={isClicked} setIsClicked={setIsClicked} post={post} />
       </div>
+      <Annotation isClicked={isClicked} />
     </div>
   )
 }
@@ -98,7 +99,7 @@ interface PostButtonProps {
   post: () => Promise<void>;
 }
 
-function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): JSX.Element {
+function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): ReactNode {
   async function handleClick(): Promise<void> {
     setIsClicked(true);
     await post();
@@ -122,6 +123,15 @@ function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps
       </button>
     );
   }
+}
+
+function Annotation({isClicked}: {isClicked: boolean}): ReactNode | null {
+  if (isClicked) {
+    return (
+      <p className="annotation"><FaInfoCircle color={"#FFCC01"} /> Posting is done asynchronously, so it takes about one minute. Posting will continue without any problems even if this popup is closed.</p>
+    );
+  }
+  return null;
 }
 
 export default App
