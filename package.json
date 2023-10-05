@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "zip": "tsc && vite build && zip -r dist.zip dist/"
   },
   "dependencies": {
     "@types/chrome": "^0.0.246",
