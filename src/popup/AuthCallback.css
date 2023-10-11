@@ -1,0 +1,15 @@
+.CallBackWrapper {
+  width: 800px;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.CallBackWrapper .status {
+  font-size: 30px;
+  color: #15202B;
+}
+
+.CallBackWrapper .message {
+  font-size: 20px;
+  color: #15202B;
+}

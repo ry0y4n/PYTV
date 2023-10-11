@@ -11,11 +11,19 @@ function App(): JSX.Element {
   const [isClicked, setIsClicked] = useState(false);
   const [isValidURL, setIsValidURL] = useState(false);
   // const apiUrl: string = api_endpoint;
-  const apiUrl: string = "https://tweet-youtube-clip-api.onrender.com/post";
+  const apiUrl: string = "https://tweet-youtube-clip-api.onrender.com";
+  // const apiUrl: string = "http://localhost:3001";
 
-  // 依存関係を空にすることで，起動時に一度だけ実行される
   useEffect(() => {
     setCurrentTabInfo();
+
+    // コンポーネントがマウントされたときにbody要素に'default'クラスを追加
+    document.body.classList.add('default');
+
+    // コンポーネントがアンマウントされたときに'default'クラスを削除
+    return () => {
+      document.body.classList.remove('default');
+    };
   }, []);
 
   async function setCurrentTabInfo(): Promise<void> {
@@ -32,12 +40,20 @@ function App(): JSX.Element {
   }
 
   async function post(): Promise<void> {
-    // // 疎通確認用
-    // await fetch(`${apiUrl}`);
-    // 本番用
-    await fetch(`${apiUrl}?url=${url}`);
-    
-    window.close();
+    const accessTokens = await chrome.storage.sync.get(['accessToken', 'accessSecret']);
+    if (!accessTokens.accessToken || !accessTokens.accessSecret) {
+      const res = await fetch(`${apiUrl}/auth`);
+      const data = await res.json();
+
+      await chrome.storage.sync.set({
+        oauth_token_secret: data.oauth_token_secret
+      });
+
+      window.open(data.url, '_blank');
+    } else {
+      await fetch(`${apiUrl}/post?url=${url}&accessToken=${accessTokens.accessToken}&accessSecret=${accessTokens.accessSecret}`);
+      window.close();
+    }
   }
 
   return (

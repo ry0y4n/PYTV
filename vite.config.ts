@@ -12,7 +12,10 @@ const manifest = defineManifest({
     16: "icons/icon-16px.png",
   },
   version: "1.0.0",
-  permissions: ["activeTab"],
+  permissions: [
+    "activeTab",
+    "storage"
+  ],
   action: {
     default_popup: "index.html",
     default_icon: "icons/icon-128px.png"
@@ -21,6 +24,12 @@ const manifest = defineManifest({
     service_worker: "src//background/index.ts",
     type: "module",
   },
+  web_accessible_resources: [
+    {
+      resources: ["auth_callback.html"],
+      matches: ["https://api.twitter.com/*"]
+    }
+  ]
 });
 
 export default defineConfig({
@@ -28,4 +37,12 @@ export default defineConfig({
     react(),
     crx({ manifest }),
   ],
+  build: {
+    rollupOptions: {
+      input: {
+        index: "index.html",
+        auth_callback: "auth_callback.html",
+      }
+    }
+  }
 })
