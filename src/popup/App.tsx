@@ -1,21 +1,24 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import { api_endpoint } from '../../endpoint.json'
+import { useState, useEffect } from 'react';
+import './App.css';
+// import { api_endpoint } from '../../endpoint.json'
 import { FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 import { FcCancel } from 'react-icons/fc';
 
 function App(): JSX.Element {
-  const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [isValidURL, setIsValidURL] = useState(false);
-  // const apiUrl: string = api_endpoint;
-  const apiUrl: string = "https://tweet-youtube-clip-api.onrender.com";
-  // const apiUrl: string = "http://localhost:3001";
+
+  const apiUrl =
+    import.meta.env.MODE === 'development'
+      ? 'http://localhost:3001'
+      : 'https://tweet-youtube-clip-api.onrender.com';
 
   useEffect(() => {
-    setCurrentTabInfo();
+    setCurrentTabInfo().catch((err) => {
+      console.log(err);
+    });
 
     // コンポーネントがマウントされたときにbody要素に'default'クラスを追加
     document.body.classList.add('default');
@@ -27,31 +30,42 @@ function App(): JSX.Element {
   }, []);
 
   async function setCurrentTabInfo(): Promise<void> {
-    const res = await chrome.runtime.sendMessage({ action: 'post' });
+    const res: {
+      title: string;
+      url: string;
+    } = await chrome.runtime.sendMessage({ action: 'post' });
 
     if (res.url.startsWith('https://www.youtube.com/watch?v=')) {
       setIsValidURL(true);
       setTitle(res.title);
       setUrl(res.url);
     } else {
-      setTitle("Invalid URL: Please open with the YouTube video URL.");
-      setUrl("Invalid URL: Please open with the YouTube video URL.");
+      setTitle('Invalid URL: Please open with the YouTube video URL.');
+      setUrl('Invalid URL: Please open with the YouTube video URL.');
     }
   }
 
   async function post(): Promise<void> {
-    const accessTokens = await chrome.storage.sync.get(['accessToken', 'accessSecret']);
-    if (!accessTokens.accessToken || !accessTokens.accessSecret) {
+    const accessTokens = await chrome.storage.sync.get([
+      'accessToken',
+      'accessSecret',
+    ]);
+    if (
+      accessTokens.accessToken === undefined ||
+      accessTokens.accessSecret === undefined
+    ) {
       const res = await fetch(`${apiUrl}/auth`);
       const data = await res.json();
 
       await chrome.storage.sync.set({
-        oauth_token_secret: data.oauth_token_secret
+        oauth_token_secret: data.oauth_token_secret,
       });
 
       window.open(data.url, '_blank');
     } else {
-      await fetch(`${apiUrl}/post?url=${url}&accessToken=${accessTokens.accessToken}&accessSecret=${accessTokens.accessSecret}`);
+      await fetch(
+        `${apiUrl}/post?url=${url}&accessToken=${accessTokens.accessToken}&accessSecret=${accessTokens.accessSecret}`,
+      );
       window.close();
     }
   }
@@ -70,11 +84,16 @@ function App(): JSX.Element {
         <input className="url__value" type="text" value={url} readOnly />
       </div>
       <div className="button-wrapper">
-        <PostButton isValidURL={isValidURL} isClicked={isClicked} setIsClicked={setIsClicked} post={post} />
+        <PostButton
+          isValidURL={isValidURL}
+          isClicked={isClicked}
+          setIsClicked={setIsClicked}
+          post={post}
+        />
       </div>
       <Annotation isClicked={isClicked} />
     </div>
-  )
+  );
 }
 
 interface PostButtonProps {
@@ -84,10 +103,17 @@ interface PostButtonProps {
   post: () => Promise<void>;
 }
 
-function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps): JSX.Element {
-  async function handleClick(): Promise<void> {
+function PostButton({
+  isValidURL,
+  isClicked,
+  setIsClicked,
+  post,
+}: PostButtonProps): JSX.Element {
+  function handleClick(): void {
     setIsClicked(true);
-    await post();
+    post().catch((err) => {
+      console.log(err);
+    });
   }
 
   if (isClicked) {
@@ -99,7 +125,7 @@ function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps
   } else {
     return (
       <button
-        className={isValidURL ? "post-button" : "post-button invalid"}
+        className={isValidURL ? 'post-button' : 'post-button invalid'}
         id="postButton"
         onClick={handleClick}
         disabled={!isValidURL}
@@ -110,13 +136,17 @@ function PostButton({isValidURL, isClicked, setIsClicked, post}: PostButtonProps
   }
 }
 
-function Annotation({isClicked}: {isClicked: boolean}): JSX.Element | null {
+function Annotation({ isClicked }: { isClicked: boolean }): JSX.Element | null {
   if (isClicked) {
     return (
-      <p className="annotation"><FaInfoCircle color={"#FFCC01"} /> Posting is done asynchronously, so it takes about one minute. Posting will continue without any problems even if this popup is closed.</p>
+      <p className="annotation">
+        <FaInfoCircle color={'#FFCC01'} /> Posting is done asynchronously, so it
+        takes about one minute. Posting will continue without any problems even
+        if this popup is closed.
+      </p>
     );
   }
   return null;
 }
 
-export default App
+export default App;

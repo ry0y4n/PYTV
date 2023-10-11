@@ -1,18 +1,21 @@
 async function getCurrentTab(): Promise<chrome.tabs.Tab> {
-  let queryOptions = { active: true, currentWindow: true };
-  let [tab] = await chrome.tabs.query(queryOptions);
+  const queryOptions = { active: true, currentWindow: true };
+  const [tab] = await chrome.tabs.query(queryOptions);
   return tab;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, respond) => {
   switch (request.action) {
-    case "post": {
+    case 'post': {
       getCurrentTab()
-      .then((currentTab: chrome.tabs.Tab) => {
-        const responseData = { title: currentTab.title, url: currentTab.url };
-        console.log(responseData);
-        respond(responseData);
-      });
+        .then((currentTab: chrome.tabs.Tab) => {
+          const responseData = { title: currentTab.title, url: currentTab.url };
+          console.log(responseData);
+          respond(responseData);
+        })
+        .catch((error) => {
+          throw new Error(`error: ${error}`);
+        });
       break;
     }
     default: {

@@ -1,8 +1,8 @@
 .App {
   padding: 20px;
   /* text-align: center; */
-  background-color: #15202B;
-  color: #FFF;
+  background-color: #15202b;
+  color: #fff;
 }
 
 .App-name {
@@ -15,17 +15,19 @@
   text-align: center;
 }
 
-.title__text, .url__text {
+.title__text,
+.url__text {
   margin-bottom: 7px;
   font-weight: bold;
 }
 
-.title__value, .url__value {
+.title__value,
+.url__value {
   width: 250px;
   height: 40px;
   border-radius: 5px;
-  border: 1px solid #1C9BEF;
-  box-shadow: 0 1px 3px #CCC;
+  border: 1px solid #1c9bef;
+  box-shadow: 0 1px 3px #ccc;
   font-weight: bold;
 }
 
@@ -38,10 +40,10 @@
   margin-top: 30px;
   height: 35px;
   font-weight: bold;
-  background-color: #1C9BEF;
+  background-color: #1c9bef;
   border: none;
   border-radius: 5px;
-  color: #FFF;
+  color: #fff;
   cursor: pointer;
   line-height: 0;
 }
@@ -55,14 +57,14 @@
 }
 
 .post-button.invalid:hover {
-  background-color: #1C9BEF;
+  background-color: #1c9bef;
 }
 
 .post-button__clicked {
   width: 258px;
   margin-top: 30px;
   height: 35px;
-  background-color: #1C9BEF;
+  background-color: #1c9bef;
   border: none;
   border-radius: 5px;
   line-height: 0;
