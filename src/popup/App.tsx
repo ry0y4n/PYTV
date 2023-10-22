@@ -7,6 +7,7 @@ import { FcCancel } from 'react-icons/fc';
 function App(): JSX.Element {
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
+  const [postText, setPostText] = useState('');
   const [isClicked, setIsClicked] = useState(false);
   const [isValidURL, setIsValidURL] = useState(false);
 
@@ -64,7 +65,11 @@ function App(): JSX.Element {
       window.open(data.url, '_blank');
     } else {
       await fetch(
-        `${apiUrl}/post?url=${url}&accessToken=${accessTokens.accessToken}&accessSecret=${accessTokens.accessSecret}`,
+        `${apiUrl}/post?url=${url}&accessToken=${
+          accessTokens.accessToken
+        }&accessSecret=${accessTokens.accessSecret}${
+          postText !== '' ? `&text=${encodeURIComponent(postText)}` : ''
+        }`,
       );
       window.close();
     }
@@ -82,6 +87,18 @@ function App(): JSX.Element {
       {/* <p className="url__value">{url}</p> */}
       <div className="value-wrapper">
         <input className="url__value" type="text" value={url} readOnly />
+      </div>
+      <p className="post-text__text">POST TEXT</p>
+      {/* <p className="url__value">{url}</p> */}
+      <div className="value-wrapper">
+        <textarea
+          className="post-text__value"
+          placeholder="Compose your post text. If left empty, we'll use the standard YouTube caption."
+          value={postText}
+          onChange={(e) => {
+            setPostText(e.target.value);
+          }}
+        />
       </div>
       <div className="button-wrapper">
         <PostButton

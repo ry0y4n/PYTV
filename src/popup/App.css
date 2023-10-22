@@ -16,13 +16,15 @@
 }
 
 .title__text,
-.url__text {
+.url__text,
+.post-text__text {
   margin-bottom: 7px;
   font-weight: bold;
 }
 
 .title__value,
-.url__value {
+.url__value,
+.post-text__value {
   width: 250px;
   height: 40px;
   border-radius: 5px;
