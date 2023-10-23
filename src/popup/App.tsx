@@ -65,7 +65,8 @@ function App(): JSX.Element {
 
       window.open(data.url, '_blank');
     } else {
-      if (twitterText.parseTweet(postText).valid === true) {
+      const parseResult: twitterText.ParsedTweet = twitterText.parseTweet(postText);
+      if (parseResult.valid) {
         await fetch(
           `${apiUrl}/post?url=${url}&accessToken=${
             accessTokens.accessToken
