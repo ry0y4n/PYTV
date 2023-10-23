@@ -11,7 +11,7 @@ const manifest = defineManifest({
     48: "icons/icon-48px.png",
     16: "icons/icon-16px.png",
   },
-  version: "1.0.0",
+  version: "1.1.0",
   permissions: [
     "activeTab",
     "storage"
