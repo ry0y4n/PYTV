@@ -3,6 +3,7 @@ import './App.css';
 // import { api_endpoint } from '../../endpoint.json'
 import { FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 import { FcCancel } from 'react-icons/fc';
+import twitterText from 'twitter-text';
 
 function App(): JSX.Element {
   const [title, setTitle] = useState('');
@@ -64,14 +65,16 @@ function App(): JSX.Element {
 
       window.open(data.url, '_blank');
     } else {
-      await fetch(
-        `${apiUrl}/post?url=${url}&accessToken=${
-          accessTokens.accessToken
-        }&accessSecret=${accessTokens.accessSecret}${
-          postText !== '' ? `&text=${encodeURIComponent(postText)}` : ''
-        }`,
-      );
-      window.close();
+      if (twitterText.parseTweet(postText).valid === true) {
+        await fetch(
+          `${apiUrl}/post?url=${url}&accessToken=${
+            accessTokens.accessToken
+          }&accessSecret=${accessTokens.accessSecret}${
+            postText !== '' ? `&text=${encodeURIComponent(postText)}` : ''
+          }`,
+        );
+        window.close();
+      }
     }
   }
 
