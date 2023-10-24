@@ -25,6 +25,12 @@ The extension is now available on the store:
 
 Posting takes 1-2 minutes. You can close the pop-up window at any time during this period.
 
+## API Server Repository
+
+PYTV uses a dedicated API server. For more details or if you wish to contribute, visit the repository:
+
+- [tweet-youtube-clip-api-render](https://github.com/ry0y4n/)
+
 ## Demo
 
 ![](pytv-screen-recording.gif)
